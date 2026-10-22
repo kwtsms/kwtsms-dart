@@ -61,8 +61,9 @@ void main() {
       expect(apiErrors['ERR024'], contains('IP'));
     });
 
-    test('ERR028 mentions 15 seconds', () {
-      expect(apiErrors['ERR028'], contains('15 seconds'));
+    // 2026-10-22 15:38 +03: the ERR028 window is per account, not a fixed 15 s.
+    test('ERR028 says too soon', () {
+      expect(apiErrors['ERR028'], contains('too soon'));
     });
   });
 
@@ -189,14 +190,15 @@ void main() {
       expect(enriched['action'], contains('IP'));
     });
 
-    test('ERR028 (15 second rate limit) returns action', () {
+    // 2026-10-22 15:38 +03: ERR028 is duplicate SMS protection with a per-account window.
+    test('ERR028 (duplicate SMS protection) returns action', () {
       final response = {
         'result': 'ERROR',
         'code': 'ERR028',
-        'description': 'Rate limit.',
+        'description': 'Sent to the same number too soon.',
       };
       final enriched = enrichError(response);
-      expect(enriched['action'], contains('15 seconds'));
+      expect(enriched['action'], contains('too soon'));
     });
 
     test('ERR008 (banned sender ID) returns action', () {

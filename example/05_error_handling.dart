@@ -21,7 +21,7 @@ String classifyError(String? code) {
     'ERR009', // Empty message
     'ERR012', // Message too long
     'ERR025', // Invalid phone number
-    'ERR028', // Rate limit (15-second cooldown)
+    'ERR028', // Sent to the same number too soon (opt-in duplicate SMS window). 2026-10-22 15:38 +03: no fixed 15 s
   };
 
   // Errors that require admin / ops intervention.

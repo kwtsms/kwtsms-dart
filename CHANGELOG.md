@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Docs
+- ERR028 action text: "Sent to the same number too soon." ERR028 is opt-in per account (Duplicate SMS protection) with a per-account window (10 seconds by default), not a fixed 15 seconds.
+- Test mode: test messages are queued but not delivered, and their credits are held until you delete them from the Sending Queue. Earlier text said no credits were consumed.
+
 ## [0.1.12] - 2026-03-13
 
 ### Added

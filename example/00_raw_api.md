@@ -192,7 +192,7 @@ POST /API/send/
 **Key rules:**
 - Phone numbers must include the country code (e.g., `96598765432` not `98765432`)
 - Multiple numbers: comma-separated in the `mobile` field, max 200 per request
-- `"test": "1"` queues the message but does NOT deliver it (no credits consumed permanently)
+- `"test": "1"` queues the message but does NOT deliver it. Its credits are held until you delete it from the Sending Queue in your kwtsms.com account.
 - **Always save the `msg-id`**: you need it for status checks and delivery reports
 - Sender ID is case-sensitive: `Kuwait` is not the same as `KUWAIT`
 
@@ -277,7 +277,7 @@ POST /API/dlr/
 | ERR024 | IP not whitelisted | Add IP at kwtsms.com > API > IP Lockdown |
 | ERR025 | Invalid phone number | Include the country code |
 | ERR026 | Country not activated | Contact kwtSMS support |
-| ERR028 | 15-second rate limit | Wait 15s before resending to same number |
+| ERR028 | Sent to the same number too soon. | Duplicate SMS protection is on for the account: wait for its window (10 seconds by default) before resending |
 | ERR030 | Stuck in queue | Normal for test mode. Delete from queue at kwtsms.com |
 
 ## What the client library adds

@@ -486,7 +486,7 @@ Raw API errors should never be shown to end users. Map them:
 | ERR024 | IP not whitelisted | Add IP at kwtsms.com > API > IP Lockdown |
 | ERR025 | Invalid phone number | Include the country code |
 | ERR026 | Country not activated | Contact kwtSMS support |
-| ERR028 | 15-second rate limit | Wait before resending to same number |
+| ERR028 | Sent to the same number too soon. | Duplicate SMS protection is on for the account: wait for its window (10 seconds by default) before resending |
 
 ## Phone Number Formats
 
@@ -512,14 +512,14 @@ All formats are accepted and normalized automatically:
 
 ## Test Mode
 
-**Test mode** (`KWTSMS_TEST_MODE=1`) sends your message to the kwtSMS queue but does NOT deliver it to the handset. No SMS credits are consumed. Use this during development.
+**Test mode** (`KWTSMS_TEST_MODE=1`) sends your message to the kwtSMS queue but does NOT deliver it to the handset. Its credits are held until you delete it from the Sending Queue in your kwtsms.com account. Use this during development.
 
 **Live mode** (`KWTSMS_TEST_MODE=0`) delivers the message for real and deducts credits. Always develop in test mode and switch to live only when ready for production.
 
 ```dart
 final sms = KwtSMS('user', 'pass', testMode: true);
 final result = await sms.send('96598765432', 'Test message');
-// Message is queued but NOT delivered. No credits consumed.
+// Message is queued but NOT delivered. Its credits are held until you delete it from the Sending Queue.
 ```
 
 Test messages appear in the Sending Queue at kwtsms.com. Delete them from the queue to recover any tentatively held credits. Remember to set `testMode: false` before going live.
@@ -598,7 +598,7 @@ Before going live, verify you have implemented these correctly:
 - [ ] Map raw API errors to user-facing messages (never expose ERR codes to users)
 - [ ] Log errors with full details for admin review
 - [ ] Set up low-balance alerts
-- [ ] Handle ERR028 (15-second same-number rate limit) in your UI
+- [ ] Handle ERR028 (sent to the same number too soon; only when Duplicate SMS protection is on for the account) in your UI
 - [ ] Use Transactional Sender ID for OTP (not Promotional)
 
 ## Security Checklist
@@ -652,7 +652,7 @@ Check the **Sending Queue** at [kwtsms.com](https://www.kwtsms.com/login/). If y
 
 **2. What is the difference between Test mode and Live mode?**
 
-**Test mode** (`KWTSMS_TEST_MODE=1`) sends your message to the kwtSMS queue but does NOT deliver it to the handset. No SMS credits are consumed. Use during development. **Live mode** (`KWTSMS_TEST_MODE=0`) delivers the message for real and deducts credits. Always develop in test mode and switch to live only when ready for production.
+**Test mode** (`KWTSMS_TEST_MODE=1`) sends your message to the kwtSMS queue but does NOT deliver it to the handset. Its credits are held until you delete it from the Sending Queue in your kwtsms.com account. Use during development. **Live mode** (`KWTSMS_TEST_MODE=0`) delivers the message for real and deducts credits. Always develop in test mode and switch to live only when ready for production.
 
 **3. What is a Sender ID and why should I not use "KWT-SMS" in production?**
 

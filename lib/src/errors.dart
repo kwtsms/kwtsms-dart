@@ -37,8 +37,9 @@ const Map<String, String> apiErrors = {
       'This country is not activated on your account. Contact kwtSMS support to enable the destination country.',
   'ERR027':
       'HTML tags are not allowed in the message. Remove any HTML content and try again.',
+  // 2026-10-22 15:38 +03: ERR028 is opt-in per account with a per-account window, not a fixed 15 s.
   'ERR028':
-      'You must wait at least 15 seconds before sending to the same number again. No credits were consumed.',
+      "Sent to the same number too soon. Duplicate SMS protection is on for this account, so the whole request was rejected and nothing was charged. Wait for the account's window (10 seconds by default) before resending.",
   'ERR029': 'Message ID does not exist or is incorrect.',
   'ERR030':
       'Message is stuck in the send queue with an error. Delete it at kwtsms.com > Queue to recover credits.',
