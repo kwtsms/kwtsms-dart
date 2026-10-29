@@ -1,8 +1,8 @@
 # kwtSMS Dart Client
 
 [![pub package](https://img.shields.io/pub/v/kwtsms.svg)](https://pub.dev/packages/kwtsms)
-[![CI](https://github.com/boxlinknet/kwtsms-dart/actions/workflows/test.yml/badge.svg)](https://github.com/boxlinknet/kwtsms-dart/actions/workflows/test.yml)
-[![Static Analysis](https://github.com/boxlinknet/kwtsms-dart/actions/workflows/codeql.yml/badge.svg)](https://github.com/boxlinknet/kwtsms-dart/actions/workflows/codeql.yml)
+[![CI](https://github.com/kwtsms/kwtsms-dart/actions/workflows/test.yml/badge.svg)](https://github.com/kwtsms/kwtsms-dart/actions/workflows/test.yml)
+[![Static Analysis](https://github.com/kwtsms/kwtsms-dart/actions/workflows/codeql.yml/badge.svg)](https://github.com/kwtsms/kwtsms-dart/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Dart 3](https://img.shields.io/badge/dart-%3E%3D3.0-blue.svg)](https://dart.dev)
 [![pub points](https://img.shields.io/pub/points/kwtsms)](https://pub.dev/packages/kwtsms/score)
@@ -642,7 +642,7 @@ See the [example/](example/) directory:
 
 ## CLI
 
-For command-line usage, see [kwtsms-cli](https://github.com/boxlinknet/kwtsms-cli), a standalone cross-platform binary (no Dart SDK required).
+For command-line usage, see [kwtsms-cli](https://github.com/kwtsms/kwtsms-cli), a standalone cross-platform binary (no Dart SDK required).
 
 ## FAQ
 
@@ -685,7 +685,7 @@ Save the `msg-id` from the send response, then call `sms.status(msgId)`. For int
 - **[Sender ID Help](https://www.kwtsms.com/sender-id-help.html)**: Guide to registering and managing Sender IDs
 - **[kwtSMS Dashboard](https://www.kwtsms.com/login/)**: Recharge credits, buy Sender IDs, view message logs, manage coverage
 - **[Other Integrations](https://www.kwtsms.com/integrations.html)**: Plugins and integrations for other platforms and languages
-- **[Library Issues](https://github.com/boxlinknet/kwtsms-dart/issues)**: Report bugs or request features for this Dart client
+- **[Library Issues](https://github.com/kwtsms/kwtsms-dart/issues)**: Report bugs or request features for this Dart client
 
 ## License
 
