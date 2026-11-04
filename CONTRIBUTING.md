@@ -7,7 +7,7 @@ Thank you for your interest in contributing to the kwtsms Dart client library. T
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/boxlinknet/kwtsms-dart.git
+git clone https://github.com/kwtsms/kwtsms-dart.git
 cd kwtsms-dart
 ```
 
