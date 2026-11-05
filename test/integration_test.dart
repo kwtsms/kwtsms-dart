@@ -4,7 +4,7 @@ import 'package:kwtsms/kwtsms.dart';
 
 import 'test_number.dart';
 
-// 2026-11-05 08:22 +03: live sends go only to KWTSMS_TEST_NUMBER (skipped when
+// 2026-11-05 08:20 +03: live sends go only to KWTSMS_TEST_NUMBER (skipped when
 // unset); local-rejection tests use the 965XXXXXXXX placeholder; the live
 // 250-number bulk send to generated numbers is removed (covered offline by
 // mock_bulk_test.dart). Why: those numbers belong to real people. int-testnumber.

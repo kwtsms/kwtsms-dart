@@ -1,5 +1,5 @@
 // FILE:      test/mock_bulk_test.dart
-// CREATED:   2026-11-05 08:25 +03
+// CREATED:   2026-11-05 08:20 +03
 // TASK:      int-testnumber (Boss 2026-11-05 00:33)
 // AUTHOR:    M Alhassoun
 // WHAT:      Offline test of send() with 250 numbers: internal bulk send in

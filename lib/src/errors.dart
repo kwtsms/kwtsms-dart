@@ -11,7 +11,7 @@ const Map<String, String> apiErrors = {
   'ERR004':
       'This account does not have API access. Contact kwtSMS support to enable it.',
   'ERR005': 'This account is blocked. Contact kwtSMS support.',
-  // 2026-11-05 08:27 +03: ERR006 and ERR025 examples use the 965XXXXXXXX
+  // 2026-11-05 08:20 +03: ERR006 and ERR025 examples use the 965XXXXXXXX
   // placeholder, the old sample belongs to a real person. int-testnumber.
   'ERR006':
       'No valid phone numbers. Make sure each number includes the country code (e.g., 965XXXXXXXX for Kuwait, not XXXXXXXX).',
