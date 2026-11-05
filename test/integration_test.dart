@@ -1,18 +1,13 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:test/test.dart';
 import 'package:kwtsms/kwtsms.dart';
 
-/// Generate unique Kuwait phone numbers: 9659922XXXX with random XXXX.
-List<String> _generateBulkNumbers(int count) {
-  final rng = Random(42); // seeded for reproducibility
-  final suffixes = <int>{};
-  while (suffixes.length < count) {
-    suffixes.add(rng.nextInt(10000));
-  }
-  return suffixes.map((s) => '9659922${s.toString().padLeft(4, '0')}').toList();
-}
+import 'test_number.dart';
 
+// 2026-11-05 08:22 +03: live sends go only to KWTSMS_TEST_NUMBER (skipped when
+// unset); local-rejection tests use the 965XXXXXXXX placeholder; the live
+// 250-number bulk send to generated numbers is removed (covered offline by
+// mock_bulk_test.dart). Why: those numbers belong to real people. int-testnumber.
 void main() {
   final username = Platform.environment['DART_USERNAME'] ?? '';
   final password = Platform.environment['DART_PASSWORD'] ?? '';
@@ -33,13 +28,12 @@ void main() {
   //   send mixed valid+invalid (1 valid) ...... 1
   //   send deduplicates (3→1 unique) .......... 1
   //   send with wrong sender ID ............... 1
-  //   bulk send 250 numbers ................... 250
-  //                                     total = 257
+  //                                     total = 7
   //
   // Tests that do NOT consume credits (rejected locally):
-  //   send to too-short, email, empty, emoji-only, wrong creds → 0
+  //   send to too-short, email, empty, emoji-only, wrong creds: 0
   //
-  const totalCreditsNeeded = 257;
+  const totalCreditsNeeded = 7;
 
   setUpAll(() async {
     if (!hasCredentials) return;
@@ -99,8 +93,10 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final balBefore = await sms.balance();
-      final result = await sms.send('96598765432', 'Test from Dart client');
+      final result = await sms.send(n, 'Test from Dart client');
       expect(result.result, anyOf('OK', 'ERROR'));
       if (result.result == 'OK') {
         expect(result.msgId, isNotNull);
@@ -115,8 +111,10 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final balBefore = await sms.balance();
-      final result = await sms.send('+96598765432', 'Test normalization');
+      final result = await sms.send('+$n', 'Test normalization');
       expect(result.result, anyOf('OK', 'ERROR'));
       if (result.result == 'OK') {
         expect(result.balanceAfter, balBefore! - 1);
@@ -128,8 +126,10 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final balBefore = await sms.balance();
-      final result = await sms.send('0096598765432', 'Test 00 prefix');
+      final result = await sms.send('00$n', 'Test 00 prefix');
       expect(result.result, anyOf('OK', 'ERROR'));
       if (result.result == 'OK') {
         expect(result.balanceAfter, balBefore! - 1);
@@ -141,9 +141,11 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final balBefore = await sms.balance();
       final result = await sms.send(
-        '\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662',
+        toArabicIndic(n),
         'Test Arabic digits',
       );
       expect(result.result, anyOf('OK', 'ERROR'));
@@ -157,9 +159,11 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final balBefore = await sms.balance();
       final result = await sms.send(
-        '96598765432,123,user@email.com',
+        '$n,123,user@email.com',
         'Test mixed numbers',
       );
       // 2 invalid (123 too short, email), 1 valid → 1 credit
@@ -176,12 +180,14 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final balBefore = await sms.balance();
       final result = await sms.send(
-        '+96598765432,0096598765432,96598765432',
+        '+$n,00$n,$n',
         'Test deduplication',
       );
-      // All three normalize to 96598765432 → deduplicated to 1
+      // All three normalize to the same number, deduplicated to 1
       expect(result.result, anyOf('OK', 'ERROR'));
       if (result.result == 'OK') {
         expect(result.numbers, 1);
@@ -195,8 +201,10 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
+      final n = testNumberOrSkip();
+      if (n == null) return;
       final result = await sms.send(
-        '96598765432',
+        n,
         'Test wrong sender',
         sender: 'INVALID-SENDER-ID-THAT-DOES-NOT-EXIST',
       );
@@ -233,7 +241,7 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
-      final result = await sms.send('96598765432', '');
+      final result = await sms.send(testNumberPlaceholder, '');
       expect(result.result, 'ERROR');
     });
 
@@ -242,7 +250,8 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
-      final result = await sms.send('96598765432', '\u{1F600}\u{1F601}');
+      final result =
+          await sms.send(testNumberPlaceholder, '\u{1F600}\u{1F601}');
       expect(result.result, 'ERROR');
       expect(result.code, 'ERR009');
     });
@@ -254,8 +263,9 @@ void main() {
         markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
         return;
       }
-      final result =
-          await sms.validate(['96598765432', '123', 'test@email.com']);
+      final n = testNumberOrSkip();
+      if (n == null) return;
+      final result = await sms.validate([n, '123', 'test@email.com']);
       // 123 and email should be rejected locally
       expect(result.rejected.length, 2);
     });
@@ -305,66 +315,5 @@ void main() {
       await sms.verify();
       expect(sms.cachedBalance, isNotNull);
     });
-  });
-
-  group('Bulk send 250 numbers (live API, test mode)', () {
-    test('send() with 250 numbers triggers internal bulk send [250 credits]',
-        () async {
-      if (!hasCredentials) {
-        markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
-        return;
-      }
-
-      // 1. Get exact balance right before bulk send
-      final balBefore = await sms.balance();
-      expect(balBefore, isNotNull);
-      expect(balBefore!, greaterThanOrEqualTo(250),
-          reason: 'Need at least 250 credits for bulk send. '
-              'Current balance: $balBefore');
-
-      // 2. Generate 250 unique numbers: 9659922XXXX
-      final numbers = _generateBulkNumbers(250);
-      expect(numbers.length, 250);
-      expect(numbers.toSet().length, 250, reason: 'all numbers must be unique');
-
-      // 3. Call send() once with all 250 numbers comma-separated.
-      //    send() internally detects >200 and delegates to sendBulk(),
-      //    which splits into 2 batches (200 + 50) with 0.5s delay.
-      final mobileArg = numbers.join(',');
-      final result = await sms.send(mobileArg, 'Dart bulk test 250 numbers');
-
-      expect(result.result, 'OK',
-          reason: 'bulk send in test mode should succeed');
-      expect(result.msgId, isNotNull,
-          reason: 'send() returns the first batch msg-id');
-      expect(result.numbers, 250,
-          reason: '250 unique numbers should all be sent');
-      expect(result.pointsCharged, 250,
-          reason: '1 point per number = 250 points');
-
-      // 4. Verify balance decreased by exactly 250
-      final balanceAfter = result.balanceAfter!;
-      expect(balanceAfter, balBefore - 250,
-          reason: 'balance should decrease by exactly 250 '
-              '(before: $balBefore, after: $balanceAfter)');
-
-      // 5. cachedBalance should be updated to the post-send value
-      expect(sms.cachedBalance, balanceAfter);
-
-      // 6. Check status of the returned msg-id.
-      //    Test-mode messages are stuck in queue → ERR030 is expected.
-      final statusResult = await sms.status(result.msgId!);
-      expect(statusResult.result, 'ERROR');
-      expect(statusResult.code, 'ERR030',
-          reason: 'test-mode messages show ERR030 (stuck in queue)');
-
-      // 7. Final balance sanity check against starting balance.
-      //    Individual send tests before this consumed ~7 credits,
-      //    plus this bulk send consumed 250 credits.
-      final finalBal = await sms.balance();
-      expect(finalBal, lessThan(startingBalance),
-          reason: 'final balance must be less than starting balance '
-              '($startingBalance)');
-    }, timeout: Timeout(Duration(seconds: 60)));
   });
 }

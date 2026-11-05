@@ -129,7 +129,7 @@ Future<void> main() async {
 
   // ─── 4. Validate ────────────────────────────────────────────────────
   // Endpoint: POST /API/validate/
-  // Body:     { "username", "password", "mobile": "96598765432,123456789" }
+  // Body:     { "username", "password", "mobile": "965XXXXXXXX,123456789" }
   // Returns:  { "result": "OK", "mobile": { "OK": [...], "ER": [...], "NR": [...] } }
   //
   // OK = valid and routable
@@ -140,7 +140,7 @@ Future<void> main() async {
   final validateResponse = await post('validate', {
     'username': username,
     'password': password,
-    'mobile': '96598765432,123456789,44712345678',
+    'mobile': '965XXXXXXXX,123456789,44712345678',
   });
   print('Response: ${jsonEncode(validateResponse)}');
 
@@ -162,7 +162,7 @@ Future<void> main() async {
   // Important:
   //   - Always POST (never GET: GET leaks credentials in server logs)
   //   - Always set Content-Type: application/json
-  //   - Phone numbers must include the country code (e.g., 96598765432)
+  //   - Phone numbers must include the country code (e.g., 965XXXXXXXX)
   //   - Multiple numbers: comma-separated, max 200 per request
   //   - Save msg-id immediately: you need it for status/delivery reports
   //   - "test": "1" queues the message but does NOT deliver it
@@ -172,7 +172,7 @@ Future<void> main() async {
     'username': username,
     'password': password,
     'sender': senderId,
-    'mobile': '96598765432',
+    'mobile': '965XXXXXXXX',
     'message': 'Hello from raw Dart API example!',
     'test': testMode,
   });
@@ -198,7 +198,7 @@ Future<void> main() async {
     'username': username,
     'password': password,
     'sender': senderId,
-    'mobile': '96598765432,96512345678',
+    'mobile': '965XXXXXXXX,96512345678',
     'message': 'Hello to two numbers!',
     'test': testMode,
   });
@@ -282,7 +282,7 @@ Future<void> main() async {
   print('Method:        POST (always, never GET)');
   print('Content-Type:  application/json');
   print('Auth:          username + password in every request body');
-  print('Phone format:  country code + number (e.g., 96598765432)');
+  print('Phone format:  country code + number (e.g., 965XXXXXXXX)');
   print('Test mode:     "test": "1" in send body');
   print('');
   print('Endpoints:');

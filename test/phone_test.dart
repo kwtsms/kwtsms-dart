@@ -1,53 +1,78 @@
+// 2026-11-05 08:18 +03: Kuwait samples now come from KWTSMS_TEST_NUMBER via
+// test_number.dart (skipped when unset), format variants built at runtime,
+// assertions hide the values; the India sample no longer embeds a Kuwait
+// sample. Why: the old samples belong to real people. int-testnumber.
 import 'package:test/test.dart';
 import 'package:kwtsms/kwtsms.dart';
+
+import 'test_number.dart';
 
 void main() {
   group('normalizePhone', () {
     test('strips + prefix', () {
-      expect(normalizePhone('+96598765432'), '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone('+$n'), n);
+    }, skip: testNumberSkip);
 
     test('strips 00 prefix', () {
-      expect(normalizePhone('0096598765432'), '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone('00$n'), n);
+    }, skip: testNumberSkip);
 
     test('strips spaces', () {
-      expect(normalizePhone('965 9876 5432'), '96598765432');
-    });
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('$cc $a $b'), n);
+    }, skip: testNumberSkip);
 
     test('strips dashes', () {
-      expect(normalizePhone('965-9876-5432'), '96598765432');
-    });
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('$cc-$a-$b'), n);
+    }, skip: testNumberSkip);
 
     test('strips dots', () {
-      expect(normalizePhone('965.9876.5432'), '96598765432');
-    });
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('$cc.$a.$b'), n);
+    }, skip: testNumberSkip);
 
     test('strips parentheses', () {
-      expect(normalizePhone('(965) 98765432'), '96598765432');
-    });
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('($cc) $a$b'), n);
+    }, skip: testNumberSkip);
 
     test('strips slashes', () {
-      expect(normalizePhone('965/9876/5432'), '96598765432');
-    });
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('$cc/$a/$b'), n);
+    }, skip: testNumberSkip);
 
     test('converts Arabic-Indic digits', () {
-      expect(
-          normalizePhone(
-              '\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662'),
-          '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone(toArabicIndic(n)), n);
+    }, skip: testNumberSkip);
 
     test('converts Extended Arabic-Indic (Persian) digits', () {
-      expect(
-          normalizePhone(
-              '\u06F9\u06F6\u06F5\u06F9\u06F8\u06F7\u06F6\u06F5\u06F4\u06F3\u06F2'),
-          '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone(toPersian(n)), n);
+    }, skip: testNumberSkip);
+
+    test('converts Arabic-Indic with spaces, dashes, + and 00', () {
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('+${toArabicIndic(n)}'), n);
+      expectSameNumber(normalizePhone(toArabicIndic('00$n')), n);
+      expectSameNumber(normalizePhone(toArabicIndic('$cc $a $b')), n);
+      expectSameNumber(normalizePhone(toArabicIndic('$cc-$a-$b')), n);
+      expectSameNumber(normalizePhone('$cc${toArabicIndic(a + b)}'), n);
+    }, skip: testNumberSkip);
 
     test('strips leading zeros after normalization', () {
-      expect(normalizePhone('00096598765432'), '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone('000$n'), n);
+    }, skip: testNumberSkip);
 
     test('returns empty string for empty input', () {
       expect(normalizePhone(''), '');
@@ -66,12 +91,15 @@ void main() {
     });
 
     test('trims whitespace', () {
-      expect(normalizePhone('  96598765432  '), '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone('  $n  '), n);
+    }, skip: testNumberSkip);
 
     test('handles complex format', () {
-      expect(normalizePhone('+00 (965) 9876-5432'), '96598765432');
-    });
+      final n = testNumber();
+      final (cc, a, b) = splitKw(n);
+      expectSameNumber(normalizePhone('+00 ($cc) $a-$b'), n);
+    }, skip: testNumberSkip);
 
     // Trunk prefix stripping tests
     test('strips Saudi trunk prefix: 9660559... -> 966559...', () {
@@ -94,10 +122,11 @@ void main() {
       expect(normalizePhone('20010123456789'), '2010123456789');
     });
 
-    test('strips Kuwait trunk prefix: 96509876 -> 9659876', () {
+    test('strips Kuwait trunk prefix: 9650XXXXXXXX -> 965XXXXXXXX', () {
       // Kuwait numbers don't normally have trunk prefix, but handle it
-      expect(normalizePhone('965098765432'), '96598765432');
-    });
+      final n = testNumber();
+      expectSameNumber(normalizePhone('9650${n.substring(3)}'), n);
+    }, skip: testNumberSkip);
 
     test('does not strip when no trunk prefix', () {
       expect(normalizePhone('966559876543'), '966559876543');
@@ -110,8 +139,8 @@ void main() {
 
   group('findCountryCode', () {
     test('finds 3-digit code (Kuwait 965)', () {
-      expect(findCountryCode('96598765432'), '965');
-    });
+      expect(findCountryCode(testNumber()), '965');
+    }, skip: testNumberSkip);
 
     test('finds 2-digit code (Egypt 20)', () {
       expect(findCountryCode('201012345678'), '20');
@@ -122,8 +151,8 @@ void main() {
     });
 
     test('prefers longer code: 965 over 9 (no 9 rule)', () {
-      expect(findCountryCode('96598765432'), '965');
-    });
+      expect(findCountryCode(testNumber()), '965');
+    }, skip: testNumberSkip);
 
     test('prefers 3-digit over 2-digit when both exist', () {
       // 420 (Czech) should match before 42 (not a code)
@@ -141,10 +170,10 @@ void main() {
 
   group('validatePhoneFormat', () {
     test('valid Kuwait number', () {
-      final (valid, error) = validatePhoneFormat('96598765432');
+      final (valid, error) = validatePhoneFormat(testNumber());
       expect(valid, true);
       expect(error, isNull);
-    });
+    }, skip: testNumberSkip);
 
     test('invalid Kuwait number: wrong length', () {
       final (valid, error) = validatePhoneFormat('9651234567'); // 7 local
@@ -226,11 +255,12 @@ void main() {
 
   group('validatePhoneInput', () {
     test('valid Kuwait number', () {
-      final (valid, error, normalized) = validatePhoneInput('96598765432');
+      final n = testNumber();
+      final (valid, error, normalized) = validatePhoneInput(n);
       expect(valid, true);
       expect(error, isNull);
-      expect(normalized, '96598765432');
-    });
+      expectSameNumber(normalized, n);
+    }, skip: testNumberSkip);
 
     test('empty string', () {
       final (valid, error, normalized) = validatePhoneInput('');
@@ -290,33 +320,44 @@ void main() {
     });
 
     test('valid with + prefix', () {
-      final (valid, error, normalized) = validatePhoneInput('+96598765432');
+      final n = testNumber();
+      final (valid, error, normalized) = validatePhoneInput('+$n');
       expect(valid, true);
       expect(error, isNull);
-      expect(normalized, '96598765432');
-    });
+      expectSameNumber(normalized, n);
+    }, skip: testNumberSkip);
 
     test('valid with 00 prefix', () {
-      final (valid, error, normalized) = validatePhoneInput('0096598765432');
+      final n = testNumber();
+      final (valid, error, normalized) = validatePhoneInput('00$n');
       expect(valid, true);
       expect(error, isNull);
-      expect(normalized, '96598765432');
-    });
+      expectSameNumber(normalized, n);
+    }, skip: testNumberSkip);
 
     test('valid Arabic digits', () {
-      final (valid, error, normalized) = validatePhoneInput(
-          '\u0669\u0666\u0665\u0669\u0668\u0667\u0666\u0665\u0664\u0663\u0662');
+      final n = testNumber();
+      final (valid, error, normalized) = validatePhoneInput(toArabicIndic(n));
       expect(valid, true);
       expect(error, isNull);
-      expect(normalized, '96598765432');
-    });
+      expectSameNumber(normalized, n);
+    }, skip: testNumberSkip);
+
+    test('valid Persian digits', () {
+      final n = testNumber();
+      final (valid, error, normalized) = validatePhoneInput(toPersian(n));
+      expect(valid, true);
+      expect(error, isNull);
+      expectSameNumber(normalized, n);
+    }, skip: testNumberSkip);
 
     test('coerces non-string input', () {
-      final (valid, error, normalized) = validatePhoneInput(96598765432);
+      final n = testNumber();
+      final (valid, error, normalized) = validatePhoneInput(int.parse(n));
       expect(valid, true);
       expect(error, isNull);
-      expect(normalized, '96598765432');
-    });
+      expectSameNumber(normalized, n);
+    }, skip: testNumberSkip);
 
     // Country-specific validation via validatePhoneInput
     test('rejects invalid Kuwait mobile prefix', () {
@@ -362,7 +403,7 @@ void main() {
     });
 
     test('valid India number', () {
-      final (valid, error, _) = validatePhoneInput('919876543210');
+      final (valid, error, _) = validatePhoneInput('919000012345');
       expect(valid, true);
       expect(error, isNull);
     });

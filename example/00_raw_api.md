@@ -138,7 +138,7 @@ POST /API/validate/
 {
   "username": "your_api_username",
   "password": "your_api_password",
-  "mobile": "96598765432,123456789,44712345678"
+  "mobile": "965XXXXXXXX,123456789,44712345678"
 }
 ```
 
@@ -147,7 +147,7 @@ POST /API/validate/
 {
   "result": "OK",
   "mobile": {
-    "OK": ["96598765432"],
+    "OK": ["965XXXXXXXX"],
     "ER": ["123456789"],
     "NR": ["44712345678"]
   }
@@ -172,7 +172,7 @@ POST /API/send/
   "username": "your_api_username",
   "password": "your_api_password",
   "sender": "KWT-SMS",
-  "mobile": "96598765432",
+  "mobile": "965XXXXXXXX",
   "message": "Your OTP is: 123456",
   "test": "1"
 }
@@ -190,7 +190,7 @@ POST /API/send/
 ```
 
 **Key rules:**
-- Phone numbers must include the country code (e.g., `96598765432` not `98765432`)
+- Phone numbers must include the country code (e.g., `965XXXXXXXX` not `XXXXXXXX`)
 - Multiple numbers: comma-separated in the `mobile` field, max 200 per request
 - `"test": "1"` queues the message but does NOT deliver it. Its credits are held until you delete it from the Sending Queue in your kwtsms.com account.
 - **Always save the `msg-id`**: you need it for status checks and delivery reports
@@ -269,7 +269,7 @@ POST /API/dlr/
 | ERR001 | API disabled | Enable API at kwtsms.com > Account > API |
 | ERR002 | Missing parameter | Check username, password, sender, mobile, message |
 | ERR003 | Wrong credentials | Check API username/password (not your mobile number) |
-| ERR006 | No valid numbers | Include country code (e.g., 96598765432) |
+| ERR006 | No valid numbers | Include country code (e.g., 965XXXXXXXX) |
 | ERR008 | Sender ID banned | Use a different registered sender ID |
 | ERR009 | Empty message | Provide non-empty message text |
 | ERR010 | Zero balance | Recharge credits at kwtsms.com |

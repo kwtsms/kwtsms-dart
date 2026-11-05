@@ -110,13 +110,13 @@ Future<void> main() async {
 
   // -- 3. Empty message (user error) --
   print('\n=== 3. Empty message ===');
-  final emptyResult = await sms.send('96550000000', '');
+  final emptyResult = await sms.send('965XXXXXXXX', '');
   print('Result: ${emptyResult.result}');
   print('User sees: ${userMessage(emptyResult)}');
 
   // -- 4. Successful send --
   print('\n=== 4. Successful send ===');
-  final okResult = await sms.send('96550000000', 'Test message');
+  final okResult = await sms.send('965XXXXXXXX', 'Test message');
   print('Result: ${okResult.result}');
   print('User sees: ${userMessage(okResult)}');
   if (okResult.result == 'OK') {
@@ -135,7 +135,7 @@ Future<void> main() async {
   // -- 5. Mixed valid and invalid numbers --
   print('\n=== 5. Mixed valid/invalid numbers ===');
   final mixedResult = await sms.send(
-    '96550000000, bad, 96560000000, @email.com',
+    '965XXXXXXXX, bad, @email.com',
     'Hello everyone',
   );
   print('Result: ${mixedResult.result}');

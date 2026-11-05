@@ -14,7 +14,7 @@
 // Test with curl:
 //   curl -X POST http://localhost:8080/send-sms \
 //     -H "Content-Type: application/json" \
-//     -d '{"to": "96550000000", "message": "Hello from Shelf!"}'
+//     -d '{"to": "965XXXXXXXX", "message": "Hello from Shelf!"}'
 
 import 'dart:io';
 
@@ -32,7 +32,7 @@ import 'package:kwtsms/kwtsms.dart';
 /// Creates a Shelf handler that sends SMS via POST /send-sms.
 ///
 /// Request body (JSON):
-///   { "to": "96550000000", "message": "Hello" }
+///   { "to": "965XXXXXXXX", "message": "Hello" }
 ///
 /// Response (JSON):
 ///   { "ok": true, "msgId": "...", "pointsCharged": 1 }
@@ -120,7 +120,7 @@ Future<void> main() async {
   // final handler = makeSmsHandler(sms);
   // final server = await shelf_io.serve(handler, 'localhost', 8080);
   // print('Listening on http://${server.address.host}:${server.port}');
-  // print('POST /send-sms with {"to": "96550000000", "message": "Hello"}');
+  // print('POST /send-sms with {"to": "965XXXXXXXX", "message": "Hello"}');
 
   // Placeholder: show the pattern without shelf dependency.
   print('\nThis example shows the Shelf handler pattern.');

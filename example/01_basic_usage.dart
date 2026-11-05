@@ -33,7 +33,7 @@ Future<void> main() async {
   // -- 3. Send SMS to a single number --
   print('\n--- Send SMS ---');
   final result = await sms.send(
-    '96550000000', // Replace with a real Kuwait number.
+    '965XXXXXXXX', // Replace with a real Kuwait number.
     'Hello from kwtSMS Dart client!',
   );
 

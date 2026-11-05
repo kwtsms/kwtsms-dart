@@ -62,7 +62,7 @@ void main() async {
   print('Balance: ${verify.balance}');
 
   // Send SMS
-  final result = await sms.send('96598765432', 'Hello from Dart!');
+  final result = await sms.send('965XXXXXXXX', 'Hello from Dart!');
   print('Result: ${result.result}, Message ID: ${result.msgId}');
 }
 ```
@@ -169,7 +169,7 @@ Send SMS to one or more phone numbers. Auto-batches when >200 numbers.
 
 ```dart
 // Single number
-final result = await sms.send('96598765432', 'Your OTP is: 123456');
+final result = await sms.send('965XXXXXXXX', 'Your OTP is: 123456');
 
 if (result.result == 'OK') {
   print('Message ID: ${result.msgId}');         // save this!
@@ -179,13 +179,13 @@ if (result.result == 'OK') {
 
 // Multiple numbers (comma-separated)
 final result2 = await sms.send(
-  '96598765432,96512345678',
+  '965XXXXXXXX,96512345678',
   'Hello everyone!',
 );
 
 // Override sender ID
 final result3 = await sms.send(
-  '96598765432',
+  '965XXXXXXXX',
   'Alert!',
   sender: 'MY-APP',
 );
@@ -203,7 +203,7 @@ final result3 = await sms.send(
 Explicitly send to a list of numbers in batches.
 
 ```dart
-final numbers = ['96598765432', '96512345678', /* ... hundreds more */];
+final numbers = ['965XXXXXXXX', '96512345678', /* ... hundreds more */];
 final result = await sms.sendBulk(numbers, 'Campaign message');
 
 // BulkSendResult
@@ -225,7 +225,7 @@ if (result.errors.isNotEmpty) {
 Validate phone numbers with the kwtSMS API.
 
 ```dart
-final result = await sms.validate(['96598765432', '123', 'test@email.com']);
+final result = await sms.validate(['965XXXXXXXX', '123', 'test@email.com']);
 
 print('Valid (OK): ${result.ok}');        // routable numbers
 print('Format error (ER): ${result.er}'); // format issues
@@ -297,11 +297,11 @@ These are exported publicly and can be used independently.
 Strips non-digits, converts Arabic/Persian digits to Latin, removes leading zeros, and strips domestic trunk prefixes after the country code.
 
 ```dart
-normalizePhone('+96598765432');     // '96598765432'
-normalizePhone('0096598765432');    // '96598765432'
-normalizePhone('965 9876 5432');    // '96598765432'
-normalizePhone('965-9876-5432');    // '96598765432'
-normalizePhone('٩٦٥٩٨٧٦٥٤٣٢');         // '96598765432' (Arabic digits converted)
+normalizePhone('+965XXXXXXXX');     // '965XXXXXXXX'
+normalizePhone('00965XXXXXXXX');    // '965XXXXXXXX'
+normalizePhone('965 XXXX XXXX');    // '965XXXXXXXX'
+normalizePhone('965-XXXX-XXXX');    // '965XXXXXXXX'
+normalizePhone('٩٦٥XXXXXXXX');         // '965XXXXXXXX' (Arabic digits converted)
 
 // Trunk prefix stripping: removes the leading 0 after the country code
 normalizePhone('9660559876543');    // '966559876543' (Saudi 0 stripped)
@@ -315,8 +315,8 @@ normalizePhone('20010123456789');   // '2010123456789' (Egypt 0 stripped)
 Validates a phone number input. Runs normalization, basic checks (empty, email, length), and country-specific format validation (local length + mobile prefix).
 
 ```dart
-final (valid, error, normalized) = validatePhoneInput('96598765432');
-// (true, null, '96598765432')
+final (valid, error, normalized) = validatePhoneInput('965XXXXXXXX');
+// (true, null, '965XXXXXXXX')
 
 final (v2, e2, n2) = validatePhoneInput('123');
 // (false, "'123' is too short (3 digits, minimum is 7)", '123')
@@ -337,7 +337,7 @@ final (v5, e5, n5) = validatePhoneInput('9651234567');
 Finds the country code prefix from a normalized phone number. Tries 3-digit, then 2-digit, then 1-digit (longest match wins).
 
 ```dart
-findCountryCode('96598765432');   // '965' (Kuwait)
+findCountryCode('965XXXXXXXX');   // '965' (Kuwait)
 findCountryCode('201012345678');  // '20'  (Egypt)
 findCountryCode('12025551234');   // '1'   (USA/Canada)
 findCountryCode('9991234567');    // null  (unknown)
@@ -348,7 +348,7 @@ findCountryCode('9991234567');    // null  (unknown)
 Validates a normalized phone number against country-specific rules: local number length and mobile starting digits. Numbers with no matching country rules pass through.
 
 ```dart
-final (valid, error) = validatePhoneFormat('96598765432');
+final (valid, error) = validatePhoneFormat('965XXXXXXXX');
 // (true, null)
 
 final (v2, e2) = validatePhoneFormat('96512345678');
@@ -380,8 +380,8 @@ countryNames['44'];  // 'UK'
 Removes duplicate phone numbers from a list while preserving order.
 
 ```dart
-deduplicatePhones(['96598765432', '96512345678', '96598765432']);
-// ['96598765432', '96512345678']
+deduplicatePhones(['965XXXXXXXX', '96512345678', '965XXXXXXXX']);
+// ['965XXXXXXXX', '96512345678']
 ```
 
 ### cleanMessage(text)
@@ -438,7 +438,7 @@ Arabic letters and Arabic text are fully supported and never stripped.
 Every ERROR response includes an `action` field with a developer-friendly fix:
 
 ```dart
-final result = await sms.send('96598765432', 'Hello');
+final result = await sms.send('965XXXXXXXX', 'Hello');
 
 if (result.result == 'OK') {
   // Save msg-id and balance-after
@@ -463,7 +463,7 @@ Raw API errors should never be shown to end users. Map them:
 
 | Situation | API error | Show to user |
 |-----------|----------|--------------|
-| Invalid phone number | ERR006, ERR025 | "Please enter a valid phone number in international format (e.g., +965 9876 5432)." |
+| Invalid phone number | ERR006, ERR025 | "Please enter a valid phone number in international format (e.g., +965 XXXX XXXX)." |
 | Wrong credentials | ERR003 | "SMS service is temporarily unavailable. Please try again later." (log + alert admin) |
 | No balance | ERR010, ERR011 | "SMS service is temporarily unavailable. Please try again later." (alert admin) |
 | Country not supported | ERR026 | "SMS delivery to this country is not available." |
@@ -477,7 +477,7 @@ Raw API errors should never be shown to end users. Map them:
 | Code | Meaning | Action |
 |------|---------|--------|
 | ERR003 | Wrong credentials | Check KWTSMS_USERNAME and KWTSMS_PASSWORD |
-| ERR006 | No valid phone numbers | Include country code (e.g., 96598765432) |
+| ERR006 | No valid phone numbers | Include country code (e.g., 965XXXXXXXX) |
 | ERR008 | Sender ID banned | Use a different sender ID |
 | ERR009 | Empty message | Provide a non-empty message |
 | ERR010 | Zero balance | Recharge at kwtsms.com |
@@ -494,19 +494,19 @@ All formats are accepted and normalized automatically:
 
 | Input | Normalized | Valid? |
 |-------|-----------|--------|
-| `96598765432` | `96598765432` | Yes |
-| `+96598765432` | `96598765432` | Yes |
-| `0096598765432` | `96598765432` | Yes |
-| `965 9876 5432` | `96598765432` | Yes |
-| `965-9876-5432` | `96598765432` | Yes |
-| `(965) 98765432` | `96598765432` | Yes |
-| `٩٦٥٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
-| `۹۶۵۹۸۷۶۵۴۳۲` | `96598765432` | Yes |
-| `+٩٦٥٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
-| `٠٠٩٦٥٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
-| `٩٦٥ ٩٨٧٦ ٥٤٣٢` | `96598765432` | Yes |
-| `٩٦٥-٩٨٧٦-٥٤٣٢` | `96598765432` | Yes |
-| `965٩٨٧٦٥٤٣٢` | `96598765432` | Yes |
+| `965XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `+965XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `00965XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `965 XXXX XXXX` | `965XXXXXXXX` | Yes |
+| `965-XXXX-XXXX` | `965XXXXXXXX` | Yes |
+| `(965) XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `٩٦٥XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `۹۶۵XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `+٩٦٥XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `٠٠٩٦٥XXXXXXXX` | `965XXXXXXXX` | Yes |
+| `٩٦٥ XXXX XXXX` | `965XXXXXXXX` | Yes |
+| `٩٦٥-XXXX-XXXX` | `965XXXXXXXX` | Yes |
+| `965` + Arabic-Indic local digits | `965XXXXXXXX` | Yes |
 | `123456` (too short) | rejected | No |
 | `user@gmail.com` | rejected | No |
 
@@ -518,7 +518,7 @@ All formats are accepted and normalized automatically:
 
 ```dart
 final sms = KwtSMS('user', 'pass', testMode: true);
-final result = await sms.send('96598765432', 'Test message');
+final result = await sms.send('965XXXXXXXX', 'Test message');
 // Message is queued but NOT delivered. Its credits are held until you delete it from the Sending Queue.
 ```
 

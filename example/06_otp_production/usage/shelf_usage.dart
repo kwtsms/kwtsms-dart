@@ -8,8 +8,8 @@
 //   KWTSMS_TEST_MODE=1 dart run example/06_otp_production/usage/shelf_usage.dart
 //
 // Endpoints:
-//   POST /otp/send    {"phone": "96550000000"}
-//   POST /otp/verify  {"phone": "96550000000", "code": "123456"}
+//   POST /otp/send    {"phone": "965XXXXXXXX"}
+//   POST /otp/verify  {"phone": "965XXXXXXXX", "code": "123456"}
 
 import 'dart:io';
 
@@ -168,14 +168,14 @@ Future<void> main() async {
   // final handler = makeOtpHandler(otpService);
   // final server = await shelf_io.serve(handler, 'localhost', 8080);
   // print('OTP server listening on http://${server.address.host}:${server.port}');
-  // print('POST /otp/send    {"phone": "96550000000"}');
-  // print('POST /otp/verify  {"phone": "96550000000", "code": "123456"}');
+  // print('POST /otp/send    {"phone": "965XXXXXXXX"}');
+  // print('POST /otp/verify  {"phone": "965XXXXXXXX", "code": "123456"}');
 
   print('\nThis example shows the Shelf + OTP wiring pattern.');
   print('Add shelf to your pubspec.yaml and uncomment the code to run.');
 
   // Quick demo of the OTP service directly.
   print('\n--- Direct OTP demo ---');
-  final sendResult = await otpService.sendOtp('96550000000');
+  final sendResult = await otpService.sendOtp('965XXXXXXXX');
   print('sendOtp result: ok=${sendResult.ok}, error=${sendResult.error}');
 }

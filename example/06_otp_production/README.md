@@ -134,7 +134,7 @@ sms.send('num1,num2,num3', 'Your OTP: 123456');
 ```
 ```dart
 // GOOD: one number per OTP request
-sms.send('96598765432', 'Your OTP for MYAPP is: 123456');
+sms.send('965XXXXXXXX', 'Your OTP for MYAPP is: 123456');
 ```
 
 **Wrong: using Promotional Sender ID for OTP**

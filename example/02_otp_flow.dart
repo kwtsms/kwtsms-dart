@@ -31,7 +31,7 @@ Future<void> main() async {
   }
 
   // The phone number to send the OTP to.
-  const phone = '96550000000'; // Replace with a real number.
+  const phone = '965XXXXXXXX'; // Replace with a real number.
 
   // -- 1. Validate the phone number --
   print('--- Validate phone ---');

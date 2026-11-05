@@ -182,6 +182,6 @@ Future<void> main() async {
 
   // Quick demo.
   print('\n--- Direct OTP demo ---');
-  final sendResult = await otpService.sendOtp('96550000000');
+  final sendResult = await otpService.sendOtp('965XXXXXXXX');
   print('sendOtp result: ok=${sendResult.ok}, error=${sendResult.error}');
 }
