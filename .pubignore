@@ -1,0 +1,45 @@
+# 2026-11-06 01:05 +03: .pubignore replaces .gitignore for pub publish, so the .gitignore rules are copied here,
+# plus CI config and dotfiles that should not ship to pub.dev, ci-dryrun-all
+
+# Dart/Flutter build output
+.dart_tool/
+build/
+
+# Package config
+.packages
+pubspec.lock
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Environment / credentials
+.env
+*.log
+
+# AI tooling (session data, project memory)
+.claude/
+CLAUDE.md
+
+# Internal docs (PRD, design docs, not part of the published package)
+doc/
+docs/
+
+# Misc
+*.zip
+Gemfile.lock
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CI and repo dotfiles (not part of the package)
+.github/
+.gitignore
+.pubignore
