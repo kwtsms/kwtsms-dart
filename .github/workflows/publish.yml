@@ -26,6 +26,12 @@ jobs:
             echo "::error::Tag version ($tag_version) does not match pubspec.yaml version ($pub_version)"
             exit 1
           fi
+          # 2026-11-05 14:19 +03: kwtsmsVersion is sent in the User-Agent, so it must equal the tag (#939).
+          lib_version=$(grep -oE "kwtsmsVersion = '[^']+'" lib/src/request.dart | cut -d"'" -f2)
+          if [ "$tag_version" != "$lib_version" ]; then
+            echo "::error::kwtsmsVersion ($lib_version) in lib/src/request.dart does not match tag ($tag_version)"
+            exit 1
+          fi
 
       - name: Install dependencies
         run: dart pub get

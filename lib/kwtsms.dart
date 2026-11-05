@@ -31,4 +31,5 @@ export 'src/phone.dart'
         validatePhoneFormat;
 export 'src/message.dart' show cleanMessage;
 export 'src/env.dart' show loadEnvFile;
-export 'src/request.dart' show apiRequest;
+// 2026-11-05 14:18 +03: buildUserAgent and kwtsmsVersion exported (#939).
+export 'src/request.dart' show apiRequest, buildUserAgent, kwtsmsVersion;

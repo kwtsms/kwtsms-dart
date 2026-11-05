@@ -433,6 +433,17 @@ print(vars['KWTSMS_USERNAME']);
 
 Arabic letters and Arabic text are fully supported and never stripped.
 
+## User-Agent
+
+Every API request carries the User-Agent `kwtsms-dart/<version>`: the library name and version only, no
+personal or customer data. Pass your own product token as `appName` to put it in front:
+
+```dart
+final sms = KwtSMS('dart_username', 'dart_password',
+    senderId: 'MY-SENDER', appName: 'my-shop/2.1.0');
+// User-Agent: my-shop/2.1.0 kwtsms-dart/0.1.12
+```
+
 ## Error Handling
 
 Every ERROR response includes an `action` field with a developer-friendly fix:

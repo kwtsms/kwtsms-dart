@@ -307,6 +307,15 @@ class KwtSMS {
   final bool testMode;
   final String _logFile;
 
+  // 2026-11-05 14:18 +03: User-Agent sent on every API call (#939).
+  final String _userAgent;
+
+  /// Library version, sent in the User-Agent.
+  static const String version = kwtsmsVersion;
+
+  /// The User-Agent this client sends: `[app token ]kwtsms-dart/<version>`.
+  String get userAgent => _userAgent;
+
   double? _cachedBalance;
   double? _cachedPurchased;
 
@@ -323,14 +332,19 @@ class KwtSMS {
   /// - [senderId]: sender ID (defaults to `KWT-SMS`, for testing only)
   /// - [testMode]: if true, messages are queued but not delivered
   /// - [logFile]: path to JSONL log file (empty string disables logging)
+  /// - [appName]: product token of the calling app or plugin, e.g.
+  ///   `kwtsms-wordpress/3.5.2`, sent before the library token in the User-Agent
+  // 2026-11-05 14:18 +03: appName added for per-integration counts (#939).
   KwtSMS(
     this._username,
     this._password, {
     String senderId = 'KWT-SMS',
     this.testMode = false,
     String logFile = 'kwtsms.log',
+    String appName = '',
   })  : _senderId = senderId,
-        _logFile = logFile;
+        _logFile = logFile,
+        _userAgent = buildUserAgent(appName);
 
   /// Create a client from environment variables and/or .env file.
   ///
@@ -377,6 +391,7 @@ class KwtSMS {
         endpoint: 'balance',
         payload: _authPayload,
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -409,6 +424,7 @@ class KwtSMS {
         endpoint: 'balance',
         payload: _authPayload,
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -520,6 +536,7 @@ class KwtSMS {
           'mobile': deduped.join(','),
         },
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -555,6 +572,7 @@ class KwtSMS {
         endpoint: 'senderid',
         payload: _authPayload,
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -586,6 +604,7 @@ class KwtSMS {
         endpoint: 'coverage',
         payload: _authPayload,
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -634,6 +653,7 @@ class KwtSMS {
         endpoint: 'status',
         payload: {..._authPayload, 'msgid': msgId},
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -666,6 +686,7 @@ class KwtSMS {
         endpoint: 'dlr',
         payload: {..._authPayload, 'msgid': msgId},
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -752,6 +773,7 @@ class KwtSMS {
           'test': testMode ? '1' : '0',
         },
         logFile: _logFile,
+        userAgent: _userAgent,
       );
 
       if (data['result'] == 'OK') {
@@ -919,6 +941,7 @@ class KwtSMS {
             'test': testMode ? '1' : '0',
           },
           logFile: _logFile,
+          userAgent: _userAgent,
         );
 
         // Retry on ERR013 (queue full)

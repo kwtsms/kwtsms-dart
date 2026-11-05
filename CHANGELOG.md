@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- The client sends a User-Agent `kwtsms-dart/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `appName` constructor argument puts your app's token in front, e.g. `my-shop/2.1.0 kwtsms-dart/0.1.12`. New `KwtSMS.version`, `userAgent`, `kwtsmsVersion` and `buildUserAgent()`.
+
 ### Changed
 - ERR006 and ERR025 action text, docs and examples use the placeholder `965XXXXXXXX` instead of a sample mobile number; tests read the phone number from `KWTSMS_TEST_NUMBER` and skip the tests that need it when it is unset.
 - The live 250-number bulk test is replaced by an offline mocked test of the 200 + 50 batching; live tests send only to `KWTSMS_TEST_NUMBER`.
