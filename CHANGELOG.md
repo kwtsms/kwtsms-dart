@@ -5,6 +5,7 @@
 ### Changed
 - ERR006 and ERR025 action text, docs and examples use the placeholder `965XXXXXXXX` instead of a sample mobile number; tests read the phone number from `KWTSMS_TEST_NUMBER` and skip the tests that need it when it is unset.
 - The live 250-number bulk test is replaced by an offline mocked test of the 200 + 50 batching; live tests send only to `KWTSMS_TEST_NUMBER`.
+- Package author and license holder are now kwtSMS.
 
 ### Docs
 - ERR028 action text: "Sent to the same number too soon." ERR028 is opt-in per account (Duplicate SMS protection) with a per-account window (10 seconds by default), not a fixed 15 seconds.
