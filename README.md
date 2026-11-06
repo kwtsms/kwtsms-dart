@@ -441,7 +441,7 @@ personal or customer data. Pass your own product token as `appName` to put it in
 ```dart
 final sms = KwtSMS('dart_username', 'dart_password',
     senderId: 'MY-SENDER', appName: 'my-shop/2.1.0');
-// User-Agent: my-shop/2.1.0 kwtsms-dart/0.1.12
+// User-Agent: my-shop/2.1.0 kwtsms-dart/0.2.0
 ```
 
 ## Error Handling

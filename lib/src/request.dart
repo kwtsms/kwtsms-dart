@@ -10,7 +10,8 @@ const String apiBaseUrl = 'https://www.kwtsms.com/API/';
 /// Library version, sent in the User-Agent. Must equal `version:` in
 /// pubspec.yaml: a unit test and the publish workflow fail when it differs.
 // 2026-11-05 14:18 +03: added so kwtSMS can count accounts per integration (#939).
-const String kwtsmsVersion = '0.1.12';
+// 2026-11-07 02:33 +03: 0.2.0 release (User-Agent, placeholder number, ERR028 text). int-rerelease-number
+const String kwtsmsVersion = '0.2.0';
 
 /// Build the User-Agent from an optional app token: `[app token ]kwtsms-dart/<version>`.
 ///

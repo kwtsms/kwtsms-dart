@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-07
+
 ### Added
 - The client sends a User-Agent `kwtsms-dart/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `appName` constructor argument puts your app's token in front, e.g. `my-shop/2.1.0 kwtsms-dart/0.1.12`. New `KwtSMS.version`, `userAgent`, `kwtsmsVersion` and `buildUserAgent()`.
 
