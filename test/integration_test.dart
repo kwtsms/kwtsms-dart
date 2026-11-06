@@ -31,7 +31,8 @@ void main() {
   //                                     total = 7
   //
   // Tests that do NOT consume credits (rejected locally):
-  //   send to too-short, email, empty, emoji-only, wrong creds: 0
+  //   send to too-short, email, empty, emoji-only: 0
+  //   (2026-11-07 00:03 +03: wrong creds moved to mock_auth_test.dart, neg-auth-tests)
   //
   const totalCreditsNeeded = 7;
 
@@ -63,17 +64,9 @@ void main() {
       expect(result.balance, greaterThanOrEqualTo(0));
     });
 
-    test('verify with wrong credentials fails', () async {
-      if (!hasCredentials) {
-        markTestSkipped('DART_USERNAME / DART_PASSWORD not set');
-        return;
-      }
-      final bad = KwtSMS('dart_wrong_user', 'dart_wrong_pass',
-          testMode: true, logFile: '');
-      final result = await bad.verify();
-      expect(result.ok, isFalse);
-      expect(result.error, isNotNull);
-    });
+    // 2026-11-07 00:03 +03: wrong-credential test mocked; live failed logins trip the
+    // security log (task neg-auth-tests). 'verify with wrong credentials
+    // fails' moved offline to test/mock_auth_test.dart.
 
     test('balance returns a number', () async {
       if (!hasCredentials) {
