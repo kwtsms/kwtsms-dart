@@ -686,11 +686,23 @@ Rules in short:
 
 Current rules, limits and credits per country: https://www.kwtsms.com/faq/send-international-sms-messages.html
 
-**6. Can I use this with Flutter?**
+**6. Why does my message show "KWT-SMS" as the sender abroad?**
+
+Outside Kuwait, messages are sent with the Sender ID KWT-SMS. Your own Sender ID works in another country only if you hold an active business licence in that country (same name as in Kuwait). Inside Kuwait, your own Sender ID shows as usual.
+
+<div dir="rtl">
+
+**لماذا يظهر اسم المرسل "KWT-SMS" عند الإرسال إلى خارج الكويت؟**
+
+خارج الكويت تُرسل الرسائل باسم المرسل KWT-SMS. لا يعمل اسم المرسل الخاص بكم في دولة أخرى إلا إذا كان لديكم ترخيص تجاري ساري في تلك الدولة (بنفس الاسم المستخدم في الكويت). داخل الكويت يظهر اسم المرسل الخاص بكم كالمعتاد.
+
+</div>
+
+**7. Can I use this with Flutter?**
 
 Yes. The library works in both pure Dart (server-side) and Flutter (mobile) contexts. Install with `flutter pub add kwtsms`.
 
-**7. How do I check if a message was delivered?**
+**8. How do I check if a message was delivered?**
 
 Save the `msg-id` from the send response, then call `sms.status(msgId)`. For international numbers, use `sms.deliveryReport(msgId)` (wait 5+ minutes). Kuwait numbers do not support delivery reports.
 
